@@ -5,7 +5,7 @@ import com.example.democrud.repository.CategoryRepository;
 import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
 import com.example.democrud.service.CategoryService;
-import com.example.democrud.service.Impl.CategoryServiceImplHelper;
+import com.example.democrud.service.impl.CategoryServiceImplHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
