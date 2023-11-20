@@ -6,6 +6,8 @@ import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
 import com.example.democrud.service.CategoryService;
 import com.example.democrud.service.Impl.CategoryServiceImplHelper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,8 @@ import java.util.Optional;
  * @author TRI
  */
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/api")
+
 public class CategoryController {
 
     @Autowired
@@ -35,9 +38,10 @@ public class CategoryController {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @GetMapping("/")
+    @GetMapping("/hello")
+    @ApiOperation(value = "Get a greeting message", response = String.class)
     public String test() {
-        return "Hello";
+        return "Hello, Swagger";
     }
 
     @PostMapping("/search")
