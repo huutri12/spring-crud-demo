@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.example.democrud.utils.Constants.AUTHOR;
+import static com.example.democrud.service.impl.CategoryServiceImplHelper.convertEntityToResponse;
+import static com.example.democrud.service.impl.CategoryServiceImplHelper.convertRequestToEntity;
 import static com.example.democrud.utils.Constants.IS_DELETED.NO;
 
 /**
@@ -28,31 +28,6 @@ import static com.example.democrud.utils.Constants.IS_DELETED.NO;
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
-
-    private static CategoryResponse convertEntityToResponse(Optional<Category> category) {
-        CategoryResponse categoryResponse = new CategoryResponse();
-        categoryResponse.setId(category.get().getId());
-        categoryResponse.setName(category.get().getName());
-        categoryResponse.setCreatedAt(LocalDateTime.now());
-        categoryResponse.setUpdatedAt(LocalDateTime.now());
-        categoryResponse.setCreatedBy(AUTHOR);
-        categoryResponse.setUpdatedBy(AUTHOR);
-        categoryResponse.setDeleted(NO);
-        return categoryResponse;
-    }
-
-    private static Category convertRequestToEntity(CategoryRequest categoryRequest) {
-        Category category = new Category();
-        category.setId(categoryRequest.getId());
-        category.setName(categoryRequest.getName());
-        category.setAfterName(categoryRequest.getAfterName());
-        category.setCreatedAt(LocalDateTime.now());
-        category.setUpdatedAt(LocalDateTime.now());
-        category.setCreatedBy(AUTHOR);
-        category.setUpdatedBy(AUTHOR);
-        category.setDeleted(categoryRequest.isDeleted());
-        return category;
-    }
 
     @Override
     public CategoryResponse addCategory(CategoryRequest categoryRequest) {
