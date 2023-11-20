@@ -6,6 +6,7 @@ import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
 import com.example.democrud.service.CategoryService;
 import com.example.democrud.utils.Mixin;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,12 @@ import static com.example.democrud.utils.Constants.IS_DELETED.NO;
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Override
+    public List<CategoryResponse> findAll() {
+        List<CategoryResponse> categoryResponseList = categoryRepository.findAll().stream().map(e -> convertEntityToResponse(Optional.ofNullable(e))).collect(Collectors.toList());
+        return categoryResponseList;
+    }
 
     @Override
     public CategoryResponse addCategory(CategoryRequest categoryRequest) {

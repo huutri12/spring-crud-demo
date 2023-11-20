@@ -40,11 +40,8 @@ public class CategoryController {
      * @return
      */
     @PostMapping("/get-all")
-    public ResponseEntity getAll(@RequestBody CategoryRequest categoryRequest) {
-        if (!CategoryServiceImplHelper.isValidBeforeGetList(categoryRequest.getName())) {
-            return new ResponseEntity("Vui lòng nhập chiều dài < 40 ký tự", null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        List<CategoryResponse> categories = categoryService.(categoryRequest.getName());
+    public ResponseEntity findAll() {
+        List<CategoryResponse> categories = categoryService.findAll();
         return ResponseEntity.ok(categories);
     }
 
@@ -53,7 +50,7 @@ public class CategoryController {
         if (!CategoryServiceImplHelper.isValidBeforeGetList(categoryRequest.getName())) {
             return new ResponseEntity("Vui lòng nhập chiều dài < 40 ký tự", null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        List<CategoryResponse> categories = categoryService.search(categoryRequest);
+        List<CategoryResponse> categories = categoryService.getByName(categoryRequest.getName());
         return ResponseEntity.ok(categories);
     }
 
