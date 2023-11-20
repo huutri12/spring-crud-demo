@@ -5,7 +5,7 @@ import com.example.democrud.repository.CategoryRepository;
 import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
 import com.example.democrud.service.CategoryService;
-import com.example.democrud.utils.Helper;
+import com.example.democrud.utils.Mixin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.example.democrud.utils.Constants.AUTHOR;
 import static com.example.democrud.utils.Constants.IS_DELETED.NO;
 
 /**
@@ -27,8 +28,6 @@ import static com.example.democrud.utils.Constants.IS_DELETED.NO;
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
-
-    private static final String AUTHOR = "TRI";
 
     private static CategoryResponse convertEntityToResponse(Optional<Category> category) {
         CategoryResponse categoryResponse = new CategoryResponse();
@@ -58,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse addCategory(CategoryRequest categoryRequest) {
         categoryRequest.setDeleted(NO);
-        categoryRequest.setAfterName(Helper.removeSign(categoryRequest.getName()));
+        categoryRequest.setAfterName(Mixin.removeSign(categoryRequest.getName()));
         Category category = categoryRepository.save(convertRequestToEntity(categoryRequest));
         return convertEntityToResponse(Optional.of(category));
     }
@@ -124,7 +123,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteMultipleCategories(List<Long> categoryIds) {
-        //TODO: bổ sung thêm query để get danh sách ID thực sự tồn tại. Selec * From ID
+        //TODO: bổ sung thêm query để get danh sách ID thực sự tồn tại. Select * From ID
         for (Long categoryId : categoryIds) {
             categoryRepository.deleteById(categoryId);
         }
@@ -134,13 +133,6 @@ public class CategoryServiceImpl implements CategoryService {
     public Page<CategoryResponse> findPaginated(int pageNo, int pageSize) {
         return null;
     }
-
-   /* @Override
-    public Page<CategoryResponse> findPaginated(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo-1,pageSize);
-        return this.categoryRepository.findAll(pageable);
-    }*/
-
 
 }
 
