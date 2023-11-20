@@ -1,4 +1,4 @@
-package com.example.democrud.service.Impl;
+package com.example.democrud.service.impl;
 
 import com.example.democrud.entity.Product;
 import com.example.democrud.repository.ProductRepository;

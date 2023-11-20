@@ -13,6 +13,13 @@ import java.util.List;
  * @author TRI
  */
 public interface CategoryService {
+
+    /**
+     * func find all
+     * @return List<CategoryResponse>
+     */
+    List<CategoryResponse> findAll();
+
     /**
      * func add Category
      *

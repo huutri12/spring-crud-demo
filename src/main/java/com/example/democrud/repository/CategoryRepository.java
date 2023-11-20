@@ -26,6 +26,8 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
             " LOWER(name) LIKE LOWER(:name) " +
             "AND is_deleted = false";
 
+    List<Category> findAll();
+
     @Query(value = sqlFindByNameContaining, nativeQuery = true)
     List<Category> findByNameContaining(@Param("name") String name);
 
