@@ -1,6 +1,5 @@
 package com.example.democrud.controller;
 
-import com.example.democrud.entity.Category;
 import com.example.democrud.repository.CategoryRepository;
 import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * CategoryController class
@@ -21,11 +19,11 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -39,6 +37,13 @@ public class CategoryController {
         return categoryService.findAll();
     }
 
+    /**
+     * func search
+     *
+     * @param categoryRequest
+     * @param pageRequest
+     * @return
+     */
     @PostMapping("/search")
     public ResponseEntity search(@RequestBody CategoryRequest categoryRequest, @RequestBody PageRequest pageRequest) {
         return categoryService.search(categoryRequest, pageRequest);
@@ -84,13 +89,8 @@ public class CategoryController {
      * @return boolean
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<HttpStatus> deleteCategory(@PathVariable("id") long id) {
-        try {
-            categoryRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<HttpStatus> deleteCategory(@PathVariable("id") Long id) {
+        return categoryService.delete(id);
     }
 
 }

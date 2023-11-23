@@ -16,12 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.example.democrud.service.impl.CategoryServiceImplHelper.*;
+import static com.example.democrud.service.impl.CategoryServiceImplHelper.convertEntityToResponse;
+import static com.example.democrud.service.impl.CategoryServiceImplHelper.convertRequestToEntity;
 import static com.example.democrud.utils.Constants.IS_DELETED.NO;
 
 /**
@@ -106,8 +106,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity delete(Long id) {
-        categoryRepository.softDeleteById(id);
-        return new ResponseEntity("Xóa thành công", HttpStatus.OK);
+        Optional<Category> optionalCategory = categoryRepository.findById(id);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            if (category.isDeleted() == Constants.IS_DELETED.YES) {
+                return new ResponseEntity<>("Bản ghi đã bị xáo", HttpStatus.BAD_REQUEST);
+            }
+            categoryRepository.softDeleteById(id);
+            return new ResponseEntity("Xóa thành công", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Không tìm thấy id", HttpStatus.NOT_FOUND);
+        }
     }
 }
 
