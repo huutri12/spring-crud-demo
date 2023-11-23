@@ -6,9 +6,13 @@ import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
 import com.example.democrud.service.CategoryService;
 import com.example.democrud.utils.Mixin;
-import org.springframework.beans.BeanUtils;
+import com.example.democrud.utils.PageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -75,32 +79,28 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public boolean deleteCategory(long id) {
-        if (id < 1) {
-            return false;
-        }
-        Optional<Category> category = categoryRepository.findById(id);
-        if (category.get().getName() != null) {
-            categoryRepository.softDeleteById(category.get().getId());
-        }
-        return true;
-    }
-
-    @Override
-    public Iterable<Category> getAllCategory() {
-        Iterable<Category> categoryAll = categoryRepository.findAll();
-        return categoryAll;
-    }
-
-    @Override
     public CategoryResponse getOneCategory(long id) {
         return convertEntityToResponse(categoryRepository.findById(id));
     }
 
-    @Override
-    public List<CategoryResponse> getByName(String name) {
+    //    @Override
+    public ResponseEntity search(CategoryRequest categoryRequest, PageRequest request) {
+        String name = categoryRequest.getName();
         name = name != null ? "%" + name + "%" : null;
-        return categoryRepository.findByNameContaining(name).stream().map(e -> convertEntityToResponse(Optional.of(e))).collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), request.getSort());
+
+        Page<Category> pageTuts = categoryRepository.findByNameContaining(name, pageable);
+        List<CategoryResponse> categoryResponses = pageTuts.getContent()
+                .stream().map(e -> convertEntityToResponse(Optional.of(e))).collect(Collectors.toList());
+
+        PageResponse pageResponse = new PageResponse();
+        pageResponse.setCurrentPage(pageTuts.getNumber());
+        pageResponse.setTotalElements(pageTuts.getTotalElements());
+        pageResponse.setTotalPages(pageTuts.getTotalPages());
+        pageResponse.setContents(categoryResponses);
+
+        return new ResponseEntity<>(pageResponse, HttpStatus.OK);
+
     }
 
     @Override
@@ -110,12 +110,6 @@ public class CategoryServiceImpl implements CategoryService {
             categoryRepository.deleteById(categoryId);
         }
     }
-
-    @Override
-    public Page<CategoryResponse> findPaginated(int pageNo, int pageSize) {
-        return null;
-    }
-
 }
 
 

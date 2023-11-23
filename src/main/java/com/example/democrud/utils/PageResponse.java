@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 public class PageResponse<T> {
     private T contents;
-    private Long currentPage;
-    private Long totalItems;
-    private Long totalPages;
+    private Integer currentPage;
+    private Long totalElements;
+    private Integer totalPages;
 }

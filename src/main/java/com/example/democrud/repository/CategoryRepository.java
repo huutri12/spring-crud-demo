@@ -29,7 +29,7 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
     List<Category> findAll();
 
     @Query(value = sqlFindByNameContaining, nativeQuery = true)
-    List<Category> findByNameContaining(@Param("name") String name);
+    Page<Category> findByNameContaining(@Param("name") String name, Pageable pageable);
 
     @Modifying
     @Transactional

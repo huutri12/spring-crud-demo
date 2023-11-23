@@ -5,9 +5,9 @@ import com.example.democrud.repository.CategoryRepository;
 import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
 import com.example.democrud.service.CategoryService;
-import io.swagger.annotations.ApiOperation;
 import com.example.democrud.service.impl.CategoryServiceImplHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,17 +30,10 @@ public class CategoryController {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @GetMapping("/hello")
-    @ApiOperation(value = "Get a greeting message", response = String.class)
-    public String test() {
-        return "Hello, Swagger";
-    }
-
     /**
      * func get all Category
      *
-     * @param categoryRequest
-     * @return
+     * @return ResponseEntity
      */
     @PostMapping("/get-all")
     public ResponseEntity findAll() {
@@ -49,12 +42,11 @@ public class CategoryController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity search(@RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity search(@RequestBody CategoryRequest categoryRequest, @RequestBody PageRequest pageRequest) {
         if (!CategoryServiceImplHelper.isValidBeforeGetList(categoryRequest.getName())) {
             return new ResponseEntity("Vui lòng nhập chiều dài < 40 ký tự", null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        List<CategoryResponse> categories = categoryService.getByName(categoryRequest.getName());
-        return ResponseEntity.ok(categories);
+        return categoryService.search(categoryRequest, pageRequest);
     }
 
     /**

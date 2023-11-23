@@ -4,6 +4,9 @@ import com.example.democrud.entity.Category;
 import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -45,21 +48,6 @@ public interface CategoryService {
     CategoryResponse updateCategory(CategoryRequest category);
 
     /**
-     * func delete Category
-     *
-     * @param id long
-     * @return boolean
-     */
-    boolean deleteCategory(long id);
-
-    /**
-     * func getAllCategory
-     *
-     * @return listAllCategory
-     */
-    Iterable<Category> getAllCategory();
-
-    /**
      * func getOneCategory
      *
      * @param id long
@@ -68,20 +56,12 @@ public interface CategoryService {
     CategoryResponse getOneCategory(long id);
 
     /**
-     * func getFilterByName
-     *
-     * @param name String
-     * @return byName
-     */
-    List<CategoryResponse> getByName(String name);
-
-    /**
      * func deleteMultipleCategories
      *
      * @param categoryId deleteMultipleCategories
-     * @return deleteList
      */
     void deleteMultipleCategories(List<Long> categoryId);
 
-    Page<CategoryResponse> findPaginated(int pageNo, int pageSize);
+    ResponseEntity search(CategoryRequest categoryRequest, PageRequest request);
+
 }
