@@ -5,6 +5,7 @@ import com.example.democrud.repository.CategoryRepository;
 import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
 import com.example.democrud.service.CategoryService;
+import com.example.democrud.utils.Constants;
 import com.example.democrud.utils.Mixin;
 import com.example.democrud.utils.PageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.example.democrud.service.impl.CategoryServiceImplHelper.convertEntityToResponse;
-import static com.example.democrud.service.impl.CategoryServiceImplHelper.convertRequestToEntity;
+import static com.example.democrud.service.impl.CategoryServiceImplHelper.*;
 import static com.example.democrud.utils.Constants.IS_DELETED.NO;
 
 /**
@@ -35,63 +35,23 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
 
     @Override
-    public List<CategoryResponse> findAll() {
-        List<CategoryResponse> categoryResponseList = categoryRepository.findAll().stream().map(e -> convertEntityToResponse(Optional.ofNullable(e))).collect(Collectors.toList());
-        return categoryResponseList;
+    public ResponseEntity<List<CategoryResponse>> findAll() {
+        List<CategoryResponse> categoryResponseList = categoryRepository.findAll().stream().map(CategoryServiceImplHelper::convertEntityToResponse).collect(Collectors.toList());
+        return ResponseEntity.ok(categoryResponseList);
     }
 
     @Override
-    public CategoryResponse addCategory(CategoryRequest categoryRequest) {
-        categoryRequest.setDeleted(NO);
-        categoryRequest.setAfterName(Mixin.removeSign(categoryRequest.getName()));
-        Category category = categoryRepository.save(convertRequestToEntity(categoryRequest));
-        return convertEntityToResponse(Optional.of(category));
-    }
-
-    @Override
-    public List<CategoryResponse> addCategoryMore(List<CategoryRequest> categoryRequestList) {
-        // TODO: HieuTT: Yêu cầu bổ sung logic là nếu có category trong db thì phải thông báo là category đó đã tồn tại
-        List<CategoryResponse> responses = new ArrayList<>();
-        if (categoryRequestList != null && !categoryRequestList.isEmpty()) {
-            List<Category> categoryList = categoryRequestList.stream().map(e -> convertRequestToEntity(e)).collect(Collectors.toList());
-
-            categoryList = (List<Category>) categoryRepository.saveAll(categoryList);
-            // Process after save -> Convert to Response
-            List<CategoryResponse> categoryResponseList = categoryList.stream().map(e -> convertEntityToResponse(Optional.ofNullable(e))).collect(Collectors.toList());
-
-            return categoryResponseList;
-        }
-        return responses;
-    }
-
-    @Override
-    public CategoryResponse updateCategory(CategoryRequest categoryRequest) {
-        if (categoryRequest != null) {
-            Optional<Category> categoryOptional = categoryRepository.findById(categoryRequest.getId());
-            if (categoryOptional.isPresent()) {
-                Category category = categoryOptional.get();
-                category.setName(category.getName());
-                category = categoryRepository.save(convertRequestToEntity(categoryRequest));
-                return convertEntityToResponse(Optional.of(category));
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public CategoryResponse getOneCategory(long id) {
-        return convertEntityToResponse(categoryRepository.findById(id));
-    }
-
-    //    @Override
     public ResponseEntity search(CategoryRequest categoryRequest, PageRequest request) {
+        if (!CategoryServiceImplHelper.isValidBeforeGetList(categoryRequest.getName())) {
+            return new ResponseEntity("Vui lòng nhập chiều dài < 40 ký tự", null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         String name = categoryRequest.getName();
         name = name != null ? "%" + name + "%" : null;
         Pageable pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), request.getSort());
 
         Page<Category> pageTuts = categoryRepository.findByNameContaining(name, pageable);
         List<CategoryResponse> categoryResponses = pageTuts.getContent()
-                .stream().map(e -> convertEntityToResponse(Optional.of(e))).collect(Collectors.toList());
+                .stream().map(CategoryServiceImplHelper::convertEntityToResponse).collect(Collectors.toList());
 
         PageResponse pageResponse = new PageResponse();
         pageResponse.setCurrentPage(pageTuts.getNumber());
@@ -100,15 +60,54 @@ public class CategoryServiceImpl implements CategoryService {
         pageResponse.setContents(categoryResponses);
 
         return new ResponseEntity<>(pageResponse, HttpStatus.OK);
-
     }
 
     @Override
-    public void deleteMultipleCategories(List<Long> categoryIds) {
-        //TODO: bổ sung thêm query để get danh sách ID thực sự tồn tại. Select * From ID
-        for (Long categoryId : categoryIds) {
-            categoryRepository.deleteById(categoryId);
+    public ResponseEntity findOne(Long id) {
+        Optional<Category> optionalCategory = categoryRepository.findById(id);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            if (category.isDeleted() == Constants.IS_DELETED.YES) {
+                return new ResponseEntity<>("Bản ghi đã bị xáo", HttpStatus.BAD_REQUEST);
+            }
+            CategoryResponse categoryResponse = convertEntityToResponse(category);
+            return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Không tìm thấy id", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Override
+    public ResponseEntity addCategory(CategoryRequest categoryRequest) {
+        Optional<Category> existedCategory = categoryRepository.findByNameAndDeletedEqualsFalse(categoryRequest.getName());
+        if (existedCategory.isPresent()) {
+            return new ResponseEntity("Đã tồn tại category: " + categoryRequest.getName(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        categoryRequest.setDeleted(NO);
+        categoryRequest.setAfterName(Mixin.removeSign(categoryRequest.getName()));
+        Category category = categoryRepository.save(convertRequestToEntity(categoryRequest));
+        return new ResponseEntity(convertEntityToResponse(category), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity updateCategory(CategoryRequest categoryRequest) {
+        if (categoryRequest == null) {
+            return new ResponseEntity("Vui lòng nhập thông tin", HttpStatus.BAD_GATEWAY);
+        }
+        if (categoryRequest.getId() == null) {
+            return new ResponseEntity("Vui lòng nhập id", HttpStatus.BAD_GATEWAY);
+        }
+        Optional<Category> categoryOptional = categoryRepository.findById(categoryRequest.getId());
+        Category category = categoryOptional.get();
+        category.setName(category.getName());
+        category = categoryRepository.save(convertRequestToEntity(categoryRequest));
+        return new ResponseEntity(convertEntityToResponse(category), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity delete(Long id) {
+        categoryRepository.softDeleteById(id);
+        return new ResponseEntity("Xóa thành công", HttpStatus.OK);
     }
 }
 

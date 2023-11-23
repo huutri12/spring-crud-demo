@@ -5,7 +5,6 @@ import com.example.democrud.repository.CategoryRepository;
 import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
 import com.example.democrud.service.CategoryService;
-import com.example.democrud.service.impl.CategoryServiceImplHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -36,16 +35,12 @@ public class CategoryController {
      * @return ResponseEntity
      */
     @PostMapping("/get-all")
-    public ResponseEntity findAll() {
-        List<CategoryResponse> categories = categoryService.findAll();
-        return ResponseEntity.ok(categories);
+    public ResponseEntity<List<CategoryResponse>> findAll() {
+        return categoryService.findAll();
     }
 
     @PostMapping("/search")
     public ResponseEntity search(@RequestBody CategoryRequest categoryRequest, @RequestBody PageRequest pageRequest) {
-        if (!CategoryServiceImplHelper.isValidBeforeGetList(categoryRequest.getName())) {
-            return new ResponseEntity("Vui lòng nhập chiều dài < 40 ký tự", null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
         return categoryService.search(categoryRequest, pageRequest);
     }
 
@@ -56,13 +51,8 @@ public class CategoryController {
      * @return get one Category
      */
     @GetMapping("/get/{id}")
-    public ResponseEntity<CategoryResponse> getCategory(@PathVariable Long id) {
-        CategoryResponse category = categoryService.getOneCategory(id);
-        if (category != null) {
-            return ResponseEntity.ok(category);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity getCategory(@PathVariable Long id) {
+        return categoryService.findOne(id);
     }
 
     /**
@@ -73,27 +63,7 @@ public class CategoryController {
      */
     @PostMapping("/add")
     public ResponseEntity addCategory(@RequestBody CategoryRequest categoryRequest) {
-        Optional<Category> existedCategory = categoryRepository.findByName(categoryRequest.getName());
-        if (existedCategory.isPresent()) {
-            return ResponseEntity.internalServerError().body("Đã tồn tại category: " + categoryRequest.getName());
-        }
-        CategoryResponse newCategory = categoryService.addCategory(categoryRequest);
-        return ResponseEntity.ok(newCategory);
-    }
-
-    /**
-     * fund add multi Category
-     *
-     * @param categoryRequests AddCategory
-     * @return AddsCategory
-     */
-    @PostMapping("/add-multiple")
-    public ResponseEntity<List<CategoryResponse>> addMultipleCategories(@RequestBody List<CategoryRequest> categoryRequests) {
-        List<CategoryResponse> responses = categoryService.addCategoryMore(categoryRequests);
-        if (responses.isEmpty()) {
-            return ResponseEntity.badRequest().body(responses);
-        }
-        return ResponseEntity.ok(responses);
+        return categoryService.addCategory(categoryRequest);
     }
 
     /**
@@ -103,7 +73,7 @@ public class CategoryController {
      * @return Category
      */
     @PutMapping("/update")
-    public CategoryResponse updateCategory(@RequestBody CategoryRequest category) {
+    public ResponseEntity updateCategory(@RequestBody CategoryRequest category) {
         return categoryService.updateCategory(category);
     }
 
@@ -122,18 +92,5 @@ public class CategoryController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @DeleteMapping("/delete/list")
-    public ResponseEntity<String> deleteCategories(@RequestBody List<Long> categoryIds) {
-        categoryService.deleteMultipleCategories(categoryIds);
-        return ResponseEntity.ok("Đã xóa các danh mục thành công");
-    }
-
-   /* @PostMapping
-    public List<CategoryResponse> getAllCategoryPagination(@RequestBody PageRequestDto dto){
-        Pageable pageable = new PageRequestDto().getPageable(dto);
-        Page<CategoryResponse> categoryResponsePage = categoryRepository.findAll(pageable);
-        return (List<CategoryResponse>) categoryResponsePage;
-    }*/
 
 }

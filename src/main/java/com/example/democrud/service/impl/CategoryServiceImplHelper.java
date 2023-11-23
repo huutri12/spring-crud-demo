@@ -4,14 +4,21 @@ import com.example.democrud.entity.Category;
 import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static com.example.democrud.utils.Constants.AUTHOR;
 import static com.example.democrud.utils.Constants.IS_DELETED.NO;
 
 public class CategoryServiceImplHelper {
+    /**
+     * func isValidBeforeGetList
+     *
+     * @param name String
+     * @return boolean
+     */
     public static boolean isValidBeforeGetList(String name) {
         boolean isValid = true;
         if (StringUtils.isNotBlank(name) && name.trim().length() > 40) {
@@ -20,10 +27,10 @@ public class CategoryServiceImplHelper {
         return isValid;
     }
 
-    public static CategoryResponse convertEntityToResponse(Optional<Category> category) {
+    public static CategoryResponse convertEntityToResponse(Category category) {
         CategoryResponse categoryResponse = new CategoryResponse();
-        categoryResponse.setId(category.get().getId());
-        categoryResponse.setName(category.get().getName());
+        categoryResponse.setId(category.getId());
+        categoryResponse.setName(category.getName());
         categoryResponse.setCreatedAt(LocalDateTime.now());
         categoryResponse.setUpdatedAt(LocalDateTime.now());
         categoryResponse.setCreatedBy(AUTHOR);

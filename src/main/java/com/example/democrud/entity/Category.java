@@ -37,8 +37,4 @@ public class Category {
     private String updatedBy;
     private LocalDateTime updatedAt;
     private boolean isDeleted;
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products;
-
 }

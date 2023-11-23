@@ -1,11 +1,8 @@
 package com.example.democrud.service;
 
-import com.example.democrud.entity.Category;
 import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -19,33 +16,19 @@ public interface CategoryService {
 
     /**
      * func find all
+     *
      * @return List<CategoryResponse>
      */
-    List<CategoryResponse> findAll();
+    ResponseEntity<List<CategoryResponse>> findAll();
 
     /**
-     * func add Category
+     * func search
      *
-     * @param category Category
-     * @return Category
+     * @param categoryRequest
+     * @param request
+     * @return
      */
-    CategoryResponse addCategory(CategoryRequest category);
-
-    /**
-     * func add more Category
-     *
-     * @param categoryRequestList Category
-     * @return categoryRequestList
-     */
-    List<CategoryResponse> addCategoryMore(List<CategoryRequest> categoryRequestList);
-
-    /**
-     * func update Category
-     *
-     * @param category Category
-     * @return Category
-     */
-    CategoryResponse updateCategory(CategoryRequest category);
+    ResponseEntity search(CategoryRequest categoryRequest, PageRequest request);
 
     /**
      * func getOneCategory
@@ -53,15 +36,29 @@ public interface CategoryService {
      * @param id long
      * @return getOneCategory
      */
-    CategoryResponse getOneCategory(long id);
+    ResponseEntity findOne(Long id);
 
     /**
-     * func deleteMultipleCategories
+     * func add Category
      *
-     * @param categoryId deleteMultipleCategories
+     * @param category Category
+     * @return Category
      */
-    void deleteMultipleCategories(List<Long> categoryId);
+    ResponseEntity addCategory(CategoryRequest category);
 
-    ResponseEntity search(CategoryRequest categoryRequest, PageRequest request);
+    /**
+     * func update Category
+     *
+     * @param category Category
+     * @return Category
+     */
+    ResponseEntity updateCategory(CategoryRequest category);
+
+    /**
+     * func delete
+     *
+     * @param id Long
+     */
+    ResponseEntity delete(Long id);
 
 }

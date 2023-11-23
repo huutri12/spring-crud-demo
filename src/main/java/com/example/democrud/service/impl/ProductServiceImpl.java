@@ -27,7 +27,6 @@ public class ProductServiceImpl implements ProductService {
         productResponse.setId(product.get().getId());
         productResponse.setName(product.get().getName());
         productResponse.setPrice(product.get().getPrice());
-        productResponse.setCategory(product.get().getCategory());
         productResponse.setCreatedAt(LocalDateTime.now());
         productResponse.setUpdatedAt(LocalDateTime.now());
         productResponse.setCreatedBy(AUTHOR);
@@ -40,7 +39,6 @@ public class ProductServiceImpl implements ProductService {
         product.setId(productRequest.getId());
         product.setName(productRequest.getName());
         product.setPrice(productRequest.getPrice());
-        product.setCategory(productRequest.getCategory());
         product.setCreatedBy(AUTHOR);
         product.setUpdatedBy(AUTHOR);
         product.setCreatedAt(LocalDateTime.now());
