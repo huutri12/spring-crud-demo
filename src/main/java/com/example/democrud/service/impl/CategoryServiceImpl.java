@@ -50,14 +50,14 @@ public class CategoryServiceImpl implements CategoryService {
         name = name != null ? PERCENT + name + PERCENT : null;
         Pageable pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), request.getSort());
 
-        Page<CategoryEntity> pageTuts = categoryRepository.findByNameContaining(name, pageable);
-        List<CategoryResponse> categoryResponses = pageTuts.getContent()
+        Page<CategoryEntity> entities = categoryRepository.findByNameContaining(name, pageable);
+        List<CategoryResponse> categoryResponses = entities.getContent()
                 .stream().map(CategoryServiceImplHelper::convertEntityToResponse).collect(Collectors.toList());
 
         PageResponse pageResponse = new PageResponse();
-        pageResponse.setCurrentPage(pageTuts.getNumber());
-        pageResponse.setTotalElements(pageTuts.getTotalElements());
-        pageResponse.setTotalPages(pageTuts.getTotalPages());
+        pageResponse.setCurrentPage(entities.getNumber());
+        pageResponse.setTotalElements(entities.getTotalElements());
+        pageResponse.setTotalPages(entities.getTotalPages());
         pageResponse.setContents(categoryResponses);
 
         return new ResponseEntity<>(pageResponse, HttpStatus.OK);
@@ -79,7 +79,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity addCategory(CategoryRequest categoryRequest) {
+    public ResponseEntity add(CategoryRequest categoryRequest) {
         Optional<CategoryEntity> existedCategory = categoryRepository.findByNameAndDeletedEqualsFalse(categoryRequest.getName());
         if (existedCategory.isPresent()) {
             return new ResponseEntity("Đã tồn tại category: " + categoryRequest.getName(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -91,7 +91,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity updateCategory(CategoryRequest categoryRequest) {
+    public ResponseEntity update(CategoryRequest categoryRequest) {
         if (categoryRequest == null) {
             return new ResponseEntity("Vui lòng nhập thông tin", HttpStatus.BAD_GATEWAY);
         }

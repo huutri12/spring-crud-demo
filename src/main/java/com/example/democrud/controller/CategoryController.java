@@ -37,7 +37,7 @@ public class CategoryController {
     /**
      * func search
      *
-     * @param categoryRequest
+     * @param categoryRequest CategoryRequest
      * @return ResponseEntity
      */
     @PostMapping("/search")
@@ -73,7 +73,7 @@ public class CategoryController {
      */
     @PostMapping("/add")
     public ResponseEntity addCategory(@RequestBody CategoryRequest categoryRequest) {
-        return categoryService.addCategory(categoryRequest);
+        return categoryService.add(categoryRequest);
     }
 
     /**
@@ -84,7 +84,7 @@ public class CategoryController {
      */
     @PutMapping("/update")
     public ResponseEntity updateCategory(@RequestBody CategoryRequest category) {
-        return categoryService.updateCategory(category);
+        return categoryService.update(category);
     }
 
     /**

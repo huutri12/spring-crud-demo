@@ -44,7 +44,7 @@ public interface CategoryService {
      * @param category Category
      * @return Category
      */
-    ResponseEntity addCategory(CategoryRequest category);
+    ResponseEntity add(CategoryRequest category);
 
     /**
      * func update Category
@@ -52,7 +52,7 @@ public interface CategoryService {
      * @param category Category
      * @return Category
      */
-    ResponseEntity updateCategory(CategoryRequest category);
+    ResponseEntity update(CategoryRequest category);
 
     /**
      * func delete
