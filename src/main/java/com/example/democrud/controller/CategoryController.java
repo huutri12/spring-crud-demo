@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.example.democrud.utils.Constants.ID_COLUMN;
+import static com.example.democrud.utils.Constants.SORT_VALUE.ASC;
+
 /**
  * CategoryController class
  *
@@ -42,8 +45,10 @@ public class CategoryController {
      */
     @PostMapping("/search")
     public ResponseEntity search(@RequestBody CategoryRequest categoryRequest) {
-        String sort = categoryRequest.getSort().getValue();
-        String sortByColumn = categoryRequest.getSortByColumn().getValue();
+        String sort = categoryRequest.getSort().getValue().isEmpty() ?
+                ASC : categoryRequest.getSort().getValue();
+        String sortByColumn = categoryRequest.getSort().getValue().isEmpty() ?
+                ID_COLUMN : categoryRequest.getSortByColumn().getValue();
 
         PageRequest pageRequest = PageRequest.of(
                 categoryRequest.getPage(),
