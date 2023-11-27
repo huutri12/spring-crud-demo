@@ -3,11 +3,13 @@ package com.example.democrud.repository;
 import com.example.democrud.entity.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +34,8 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
     @Query(value = "SELECT * FROM category WHERE name = :name and is_deleted = false", nativeQuery = true)
     Optional<Category> findByNameAndDeletedEqualsFalse(@Param("name") String name);
 
-
+    @Modifying
+    @Transactional
     @Query(value = "UPDATE category SET is_deleted = true WHERE id = :id", nativeQuery = true)
-    void softDeleteById(@Param(value = "id") Long id);
+    void softDeleteById(@Param("id") Long id);
 }

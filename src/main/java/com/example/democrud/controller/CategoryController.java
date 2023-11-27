@@ -18,7 +18,7 @@ import java.util.List;
  * @author TRI
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/category")
 public class CategoryController {
 
     @Autowired
