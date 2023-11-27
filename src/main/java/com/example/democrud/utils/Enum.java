@@ -10,6 +10,10 @@ public class Enum {
         CommonSortEnum(String value) {
             this.value = value;
         }
+
+        public String getValue(){
+            return value;
+        }
     }
 
     public enum CategorySortEnum {
@@ -20,6 +24,10 @@ public class Enum {
 
         CategorySortEnum(String value) {
             this.value = value;
+        }
+
+        public String getValue(){
+            return value;
         }
     }
 }

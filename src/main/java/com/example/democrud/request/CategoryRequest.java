@@ -1,5 +1,7 @@
 package com.example.democrud.request;
 
+import com.example.democrud.utils.Enum;
+import com.example.democrud.utils.Enum.CategorySortEnum;
 import com.example.democrud.utils.Enum.CommonSortEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,5 +31,5 @@ public class CategoryRequest {
     private Integer page;
     private Integer size;
     private CommonSortEnum sort;
-    private String sortByColumn;
+    private CategorySortEnum sortByColumn;
 }
