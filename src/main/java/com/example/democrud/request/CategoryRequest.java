@@ -25,5 +25,8 @@ public class CategoryRequest {
     private LocalDateTime updatedAt;
     private String afterName;
     private boolean isDeleted;
-
+    private Integer page;
+    private Integer size;
+    private String sort;
+    private String sortByColumn;
 }

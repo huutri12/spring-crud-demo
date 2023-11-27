@@ -1,11 +1,11 @@
 package com.example.democrud.controller;
 
-import com.example.democrud.repository.CategoryRepository;
 import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
 import com.example.democrud.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,15 +24,12 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
-
     /**
      * func get all Category
      *
      * @return ResponseEntity
      */
-    @PostMapping("/get-all")
+    @GetMapping("/get-all")
     public ResponseEntity<List<CategoryResponse>> findAll() {
         return categoryService.findAll();
     }
@@ -41,11 +38,12 @@ public class CategoryController {
      * func search
      *
      * @param categoryRequest
-     * @param pageRequest
-     * @return
+     * @return ResponseEntity
      */
     @PostMapping("/search")
-    public ResponseEntity search(@RequestBody CategoryRequest categoryRequest, @RequestBody PageRequest pageRequest) {
+    public ResponseEntity search(@RequestBody CategoryRequest categoryRequest) {
+        PageRequest pageRequest = PageRequest.of(categoryRequest.getPage(), categoryRequest.getSize(),
+                Sort.Direction.valueOf(categoryRequest.getSort()), categoryRequest.getSortByColumn());
         return categoryService.search(categoryRequest, pageRequest);
     }
 
@@ -53,7 +51,7 @@ public class CategoryController {
      * func get one Category
      *
      * @param id get
-     * @return get one Category
+     * @return ResponseEntity
      */
     @GetMapping("/get/{id}")
     public ResponseEntity getCategory(@PathVariable Long id) {
@@ -64,7 +62,7 @@ public class CategoryController {
      * func add Category
      *
      * @param categoryRequest CategoryRequest
-     * @return Category
+     * @return ResponseEntity
      */
     @PostMapping("/add")
     public ResponseEntity addCategory(@RequestBody CategoryRequest categoryRequest) {
@@ -75,7 +73,7 @@ public class CategoryController {
      * func update Category
      *
      * @param category Category
-     * @return Category
+     * @return ResponseEntity
      */
     @PutMapping("/update")
     public ResponseEntity updateCategory(@RequestBody CategoryRequest category) {
@@ -86,7 +84,7 @@ public class CategoryController {
      * func delete Category
      *
      * @param id long
-     * @return boolean
+     * @return ResponseEntity
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteCategory(@PathVariable("id") Long id) {
