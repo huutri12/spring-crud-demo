@@ -8,6 +8,8 @@ package com.example.democrud.utils;
 public class Constants {
     public static final String AUTHOR = "TRI";
 
+    public static final String PERCENT = "%";
+
     public static class IS_DELETED {
         public static final boolean YES = true;
         public static final boolean NO = false;

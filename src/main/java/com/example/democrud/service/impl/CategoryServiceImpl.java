@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static com.example.democrud.service.impl.CategoryServiceImplHelper.convertEntityToResponse;
 import static com.example.democrud.service.impl.CategoryServiceImplHelper.convertRequestToEntity;
+import static com.example.democrud.utils.Constants.*;
 import static com.example.democrud.utils.Constants.IS_DELETED.NO;
 
 /**
@@ -46,7 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
             return new ResponseEntity("Vui lòng nhập chiều dài < 40 ký tự", null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         String name = categoryRequest.getName();
-        name = name != null ? "%" + name + "%" : null;
+        name = name != null ? PERCENT + name + PERCENT : null;
         Pageable pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), request.getSort());
 
         Page<CategoryEntity> pageTuts = categoryRepository.findByNameContaining(name, pageable);
@@ -67,7 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<CategoryEntity> optionalCategory = categoryRepository.findById(id);
         if (optionalCategory.isPresent()) {
             CategoryEntity categoryEntity = optionalCategory.get();
-            if (categoryEntity.isDeleted() == Constants.IS_DELETED.YES) {
+            if (categoryEntity.isDeleted() == IS_DELETED.YES) {
                 return new ResponseEntity<>("Bản ghi đã bị xáo", HttpStatus.BAD_REQUEST);
             }
             CategoryResponse categoryResponse = convertEntityToResponse(categoryEntity);
@@ -109,7 +110,7 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<CategoryEntity> optionalCategory = categoryRepository.findById(id);
         if (optionalCategory.isPresent()) {
             CategoryEntity categoryEntity = optionalCategory.get();
-            if (categoryEntity.isDeleted() == Constants.IS_DELETED.YES) {
+            if (categoryEntity.isDeleted() == IS_DELETED.YES) {
                 return new ResponseEntity<>("Bản ghi đã bị xáo", HttpStatus.BAD_REQUEST);
             }
             categoryRepository.softDeleteById(id);

@@ -1,24 +1,25 @@
 package com.example.democrud.utils;
 
 public class Enum {
-    public static enum CommonSort {
+    public enum CommonSortEnum {
         ASC("ASC"),
         DESC("DESC");
 
         private String value;
 
-        CommonSort(String value) {
+        CommonSortEnum(String value) {
             this.value = value;
         }
+    }
 
-        // Có thể viết một static method lấy ra CommonSort theo value.
-        public static CommonSort getByValue(String value) {
-            for (CommonSort d : CommonSort.values()) {
-                if (d.value.equals(value)) {
-                    return d;
-                }
-            }
-            return null;
+    public enum CategorySortEnum {
+        I("id"),
+        N("name");
+
+        private String value;
+
+        CategorySortEnum(String value) {
+            this.value = value;
         }
     }
 }
