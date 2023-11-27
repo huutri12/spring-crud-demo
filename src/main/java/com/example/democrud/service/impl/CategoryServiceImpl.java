@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.example.democrud.service.impl.CategoryServiceImplHelper.convertEntityToResponse;
-import static com.example.democrud.service.impl.CategoryServiceImplHelper.convertRequestToEntity;
+import static com.example.democrud.service.impl.CategoryServiceImplHelper.*;
 import static com.example.democrud.utils.Constants.*;
 import static com.example.democrud.utils.Constants.IS_DELETED.NO;
 
@@ -43,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity search(CategoryRequest categoryRequest, PageRequest request) {
-        if (!CategoryServiceImplHelper.isValidBeforeGetList(categoryRequest.getName())) {
+        if (!isValidBeforeGetList(categoryRequest.getName())) {
             return new ResponseEntity("Vui lòng nhập chiều dài < 40 ký tự", null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         String name = categoryRequest.getName();
