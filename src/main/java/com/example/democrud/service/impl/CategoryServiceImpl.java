@@ -1,6 +1,6 @@
 package com.example.democrud.service.impl;
 
-import com.example.democrud.entity.Category;
+import com.example.democrud.entity.CategoryEntity;
 import com.example.democrud.repository.CategoryRepository;
 import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
@@ -49,7 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
         name = name != null ? "%" + name + "%" : null;
         Pageable pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), request.getSort());
 
-        Page<Category> pageTuts = categoryRepository.findByNameContaining(name, pageable);
+        Page<CategoryEntity> pageTuts = categoryRepository.findByNameContaining(name, pageable);
         List<CategoryResponse> categoryResponses = pageTuts.getContent()
                 .stream().map(CategoryServiceImplHelper::convertEntityToResponse).collect(Collectors.toList());
 
@@ -64,13 +64,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity findOne(Long id) {
-        Optional<Category> optionalCategory = categoryRepository.findById(id);
+        Optional<CategoryEntity> optionalCategory = categoryRepository.findById(id);
         if (optionalCategory.isPresent()) {
-            Category category = optionalCategory.get();
-            if (category.isDeleted() == Constants.IS_DELETED.YES) {
+            CategoryEntity categoryEntity = optionalCategory.get();
+            if (categoryEntity.isDeleted() == Constants.IS_DELETED.YES) {
                 return new ResponseEntity<>("Bản ghi đã bị xáo", HttpStatus.BAD_REQUEST);
             }
-            CategoryResponse categoryResponse = convertEntityToResponse(category);
+            CategoryResponse categoryResponse = convertEntityToResponse(categoryEntity);
             return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Không tìm thấy id", HttpStatus.NOT_FOUND);
@@ -79,14 +79,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity addCategory(CategoryRequest categoryRequest) {
-        Optional<Category> existedCategory = categoryRepository.findByNameAndDeletedEqualsFalse(categoryRequest.getName());
+        Optional<CategoryEntity> existedCategory = categoryRepository.findByNameAndDeletedEqualsFalse(categoryRequest.getName());
         if (existedCategory.isPresent()) {
             return new ResponseEntity("Đã tồn tại category: " + categoryRequest.getName(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         categoryRequest.setDeleted(NO);
         categoryRequest.setAfterName(Mixin.removeSign(categoryRequest.getName()));
-        Category category = categoryRepository.save(convertRequestToEntity(categoryRequest));
-        return new ResponseEntity(convertEntityToResponse(category), HttpStatus.OK);
+        CategoryEntity categoryEntity = categoryRepository.save(convertRequestToEntity(categoryRequest));
+        return new ResponseEntity(convertEntityToResponse(categoryEntity), HttpStatus.OK);
     }
 
     @Override
@@ -97,19 +97,19 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryRequest.getId() == null) {
             return new ResponseEntity("Vui lòng nhập id", HttpStatus.BAD_GATEWAY);
         }
-        Optional<Category> categoryOptional = categoryRepository.findById(categoryRequest.getId());
-        Category category = categoryOptional.get();
-        category.setName(category.getName());
-        category = categoryRepository.save(convertRequestToEntity(categoryRequest));
-        return new ResponseEntity(convertEntityToResponse(category), HttpStatus.OK);
+        Optional<CategoryEntity> categoryOptional = categoryRepository.findById(categoryRequest.getId());
+        CategoryEntity categoryEntity = categoryOptional.get();
+        categoryEntity.setName(categoryEntity.getName());
+        categoryEntity = categoryRepository.save(convertRequestToEntity(categoryRequest));
+        return new ResponseEntity(convertEntityToResponse(categoryEntity), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity delete(Long id) {
-        Optional<Category> optionalCategory = categoryRepository.findById(id);
+        Optional<CategoryEntity> optionalCategory = categoryRepository.findById(id);
         if (optionalCategory.isPresent()) {
-            Category category = optionalCategory.get();
-            if (category.isDeleted() == Constants.IS_DELETED.YES) {
+            CategoryEntity categoryEntity = optionalCategory.get();
+            if (categoryEntity.isDeleted() == Constants.IS_DELETED.YES) {
                 return new ResponseEntity<>("Bản ghi đã bị xáo", HttpStatus.BAD_REQUEST);
             }
             categoryRepository.softDeleteById(id);

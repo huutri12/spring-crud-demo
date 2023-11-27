@@ -1,5 +1,6 @@
 package com.example.democrud.request;
 
+import com.example.democrud.utils.Enum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,6 @@ public class CategoryRequest {
     private boolean isDeleted;
     private Integer page;
     private Integer size;
-    private String sort;
+    private Enum.CommonSort sort;
     private String sortByColumn;
 }

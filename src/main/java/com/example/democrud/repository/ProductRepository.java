@@ -1,6 +1,6 @@
 package com.example.democrud.repository;
 
-import com.example.democrud.entity.Product;
+import com.example.democrud.entity.ProductEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @author TRI
  */
 @Repository
-public interface ProductRepository extends CrudRepository<Product, Long> {
+public interface ProductRepository extends CrudRepository<ProductEntity, Long> {
 }

@@ -1,6 +1,6 @@
 package com.example.democrud.service.impl;
 
-import com.example.democrud.entity.Product;
+import com.example.democrud.entity.ProductEntity;
 import com.example.democrud.repository.ProductRepository;
 import com.example.democrud.request.ProductRequest;
 import com.example.democrud.response.ProductResponse;
@@ -22,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     private static final String AUTHOR = "TRI";
-    private static ProductResponse convertEntityToResponse(Optional<Product> product){
+    private static ProductResponse convertEntityToResponse(Optional<ProductEntity> product){
         ProductResponse productResponse = new ProductResponse();
         productResponse.setId(product.get().getId());
         productResponse.setName(product.get().getName());
@@ -34,23 +34,23 @@ public class ProductServiceImpl implements ProductService {
         return productResponse;
     }
 
-    private static Product convertRequestToEntity(ProductRequest productRequest){
-        Product product = new Product();
-        product.setId(productRequest.getId());
-        product.setName(productRequest.getName());
-        product.setPrice(productRequest.getPrice());
-        product.setCreatedBy(AUTHOR);
-        product.setUpdatedBy(AUTHOR);
-        product.setCreatedAt(LocalDateTime.now());
-        product.setUpdatedAt(LocalDateTime.now());
-        return product;
+    private static ProductEntity convertRequestToEntity(ProductRequest productRequest){
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setId(productRequest.getId());
+        productEntity.setName(productRequest.getName());
+        productEntity.setPrice(productRequest.getPrice());
+        productEntity.setCreatedBy(AUTHOR);
+        productEntity.setUpdatedBy(AUTHOR);
+        productEntity.setCreatedAt(LocalDateTime.now());
+        productEntity.setUpdatedAt(LocalDateTime.now());
+        return productEntity;
     }
 
     @Override
     public ProductResponse addProduct(ProductRequest productRequest) {
         if (productRequest != null){
-            Product product = productRepository.save(convertRequestToEntity(productRequest));
-            return convertEntityToResponse(Optional.of(product));
+            ProductEntity productEntity = productRepository.save(convertRequestToEntity(productRequest));
+            return convertEntityToResponse(Optional.of(productEntity));
         }
         return null;
     }

@@ -1,11 +1,9 @@
 package com.example.democrud.service.impl;
 
-import com.example.democrud.entity.Category;
+import com.example.democrud.entity.CategoryEntity;
 import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 
@@ -27,10 +25,10 @@ public class CategoryServiceImplHelper {
         return isValid;
     }
 
-    public static CategoryResponse convertEntityToResponse(Category category) {
+    public static CategoryResponse convertEntityToResponse(CategoryEntity categoryEntity) {
         CategoryResponse categoryResponse = new CategoryResponse();
-        categoryResponse.setId(category.getId());
-        categoryResponse.setName(category.getName());
+        categoryResponse.setId(categoryEntity.getId());
+        categoryResponse.setName(categoryEntity.getName());
         categoryResponse.setCreatedAt(LocalDateTime.now());
         categoryResponse.setUpdatedAt(LocalDateTime.now());
         categoryResponse.setCreatedBy(AUTHOR);
@@ -39,16 +37,16 @@ public class CategoryServiceImplHelper {
         return categoryResponse;
     }
 
-    public static Category convertRequestToEntity(CategoryRequest categoryRequest) {
-        Category category = new Category();
-        category.setId(categoryRequest.getId());
-        category.setName(categoryRequest.getName());
-        category.setAfterName(categoryRequest.getAfterName());
-        category.setCreatedAt(LocalDateTime.now());
-        category.setUpdatedAt(LocalDateTime.now());
-        category.setCreatedBy(AUTHOR);
-        category.setUpdatedBy(AUTHOR);
-        category.setDeleted(categoryRequest.isDeleted());
-        return category;
+    public static CategoryEntity convertRequestToEntity(CategoryRequest categoryRequest) {
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setId(categoryRequest.getId());
+        categoryEntity.setName(categoryRequest.getName());
+        categoryEntity.setAfterName(categoryRequest.getAfterName());
+        categoryEntity.setCreatedAt(LocalDateTime.now());
+        categoryEntity.setUpdatedAt(LocalDateTime.now());
+        categoryEntity.setCreatedBy(AUTHOR);
+        categoryEntity.setUpdatedBy(AUTHOR);
+        categoryEntity.setDeleted(categoryRequest.isDeleted());
+        return categoryEntity;
     }
 }

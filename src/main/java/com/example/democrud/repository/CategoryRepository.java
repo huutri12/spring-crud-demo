@@ -1,6 +1,6 @@
 package com.example.democrud.repository;
 
-import com.example.democrud.entity.Category;
+import com.example.democrud.entity.CategoryEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,20 +19,20 @@ import java.util.Optional;
  * @author TRI
  */
 @Repository
-public interface CategoryRepository extends CrudRepository<Category, Long> {
+public interface CategoryRepository extends CrudRepository<CategoryEntity, Long> {
 
     String sqlFindByNameContaining = "SELECT * FROM category WHERE :name IS NULL" +
             " OR LOWER(after_name) LIKE LOWER(:name) OR" +
             " LOWER(name) LIKE LOWER(:name) " +
             "AND is_deleted = false";
 
-    List<Category> findAll();
+    List<CategoryEntity> findAll();
 
     @Query(value = sqlFindByNameContaining, nativeQuery = true)
-    Page<Category> findByNameContaining(@Param("name") String name, Pageable pageable);
+    Page<CategoryEntity> findByNameContaining(@Param("name") String name, Pageable pageable);
 
     @Query(value = "SELECT * FROM category WHERE name = :name and is_deleted = false", nativeQuery = true)
-    Optional<Category> findByNameAndDeletedEqualsFalse(@Param("name") String name);
+    Optional<CategoryEntity> findByNameAndDeletedEqualsFalse(@Param("name") String name);
 
     @Modifying
     @Transactional

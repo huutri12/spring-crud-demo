@@ -1,6 +1,6 @@
 package com.example.democrud.request;
 
-import com.example.democrud.entity.Category;
+import com.example.democrud.entity.CategoryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,5 +25,5 @@ public class ProductRequest {
     private String updatedBy;
     private String createdBy;
     private LocalDateTime updatedAt;
-    private Category category;
+    private CategoryEntity categoryEntity;
 }

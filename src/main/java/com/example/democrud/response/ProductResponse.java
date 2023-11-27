@@ -1,6 +1,6 @@
 package com.example.democrud.response;
 
-import com.example.democrud.entity.Category;
+import com.example.democrud.entity.CategoryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ public class ProductResponse {
     private Long id;
     private String name;
     private Double price;
-    private Category category;
+    private CategoryEntity categoryEntity;
     private LocalDateTime createdAt;
     private String createdBy;
     private String updatedBy;
