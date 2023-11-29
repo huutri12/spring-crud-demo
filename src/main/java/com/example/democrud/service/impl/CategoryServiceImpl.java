@@ -5,7 +5,6 @@ import com.example.democrud.repository.CategoryRepository;
 import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.response.CategoryResponse;
 import com.example.democrud.service.CategoryService;
-import com.example.democrud.utils.Constants;
 import com.example.democrud.utils.Mixin;
 import com.example.democrud.utils.PageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.example.democrud.service.impl.CategoryServiceImplHelper.*;
-import static com.example.democrud.utils.Constants.*;
+import static com.example.democrud.utils.Constants.IS_DELETED;
 import static com.example.democrud.utils.Constants.IS_DELETED.NO;
+import static com.example.democrud.utils.Constants.PERCENT;
 
 /**
  * CategoryServiceImpl class
@@ -65,16 +65,16 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity findOne(Long id) {
         Optional<CategoryEntity> optionalCategory = categoryRepository.findById(id);
-        if (optionalCategory.isPresent()) {
-            CategoryEntity categoryEntity = optionalCategory.get();
-            if (categoryEntity.isDeleted() == IS_DELETED.YES) {
-                return new ResponseEntity<>("Bản ghi đã bị xáo", HttpStatus.BAD_REQUEST);
-            }
-            CategoryResponse categoryResponse = convertEntityToResponse(categoryEntity);
-            return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
-        } else {
+        if (optionalCategory.isEmpty()) {
             return new ResponseEntity<>("Không tìm thấy id", HttpStatus.NOT_FOUND);
         }
+        CategoryEntity categoryEntity = optionalCategory.get();
+        if (categoryEntity.isDeleted() == IS_DELETED.YES) {
+            return new ResponseEntity<>("Bản ghi đã bị xáo", HttpStatus.BAD_REQUEST);
+        }
+        CategoryResponse categoryResponse = convertEntityToResponse(categoryEntity);
+        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
+
     }
 
     @Override
@@ -107,16 +107,15 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity delete(Long id) {
         Optional<CategoryEntity> optionalCategory = categoryRepository.findById(id);
-        if (optionalCategory.isPresent()) {
-            CategoryEntity categoryEntity = optionalCategory.get();
-            if (categoryEntity.isDeleted() == IS_DELETED.YES) {
-                return new ResponseEntity<>("Bản ghi đã bị xáo", HttpStatus.BAD_REQUEST);
-            }
-            categoryRepository.softDeleteById(id);
-            return new ResponseEntity("Xóa thành công", HttpStatus.OK);
-        } else {
+        if (optionalCategory.isEmpty()) {
             return new ResponseEntity<>("Không tìm thấy id", HttpStatus.NOT_FOUND);
         }
+        CategoryEntity categoryEntity = optionalCategory.get();
+        if (categoryEntity.isDeleted() == IS_DELETED.YES) {
+            return new ResponseEntity<>("Bản ghi đã bị xáo", HttpStatus.BAD_REQUEST);
+        }
+        categoryRepository.softDeleteById(id);
+        return new ResponseEntity("Xóa thành công", HttpStatus.OK);
     }
 }
 

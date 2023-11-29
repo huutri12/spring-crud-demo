@@ -21,10 +21,10 @@ import java.util.Optional;
 @Repository
 public interface CategoryRepository extends CrudRepository<CategoryEntity, Long> {
 
-    String sqlFindByNameContaining = "SELECT * FROM category WHERE :name IS NULL" +
+    String sqlFindByNameContaining = "SELECT * FROM category WHERE (:name IS NULL" +
             " OR LOWER(after_name) LIKE LOWER(:name) OR" +
-            " LOWER(name) LIKE LOWER(:name) " +
-            "AND is_deleted = false";
+            " LOWER(name) LIKE LOWER(:name)) " +
+            " AND is_deleted = false";
 
     List<CategoryEntity> findAll();
 
