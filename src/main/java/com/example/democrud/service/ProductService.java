@@ -1,9 +1,8 @@
 package com.example.democrud.service;
 
-import com.example.democrud.request.CategoryRequest;
 import com.example.democrud.request.ProductRequest;
-import com.example.democrud.response.CategoryResponse;
 import com.example.democrud.response.ProductResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface ProductService {
     /**
@@ -13,4 +12,9 @@ public interface ProductService {
      * @return Product
      */
     ProductResponse addProduct(ProductRequest product);
+
+    ResponseEntity findOne(Long id);
+
+    ResponseEntity delete(Long id);
+
 }
