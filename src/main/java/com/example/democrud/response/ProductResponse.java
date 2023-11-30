@@ -21,7 +21,8 @@ public class ProductResponse {
     private Long id;
     private String name;
     private Double price;
-    private CategoryEntity categoryEntity;
+    private Long idCategory;
+    private String nameCategory;
     private LocalDateTime createdAt;
     private String createdBy;
     private String updatedBy;

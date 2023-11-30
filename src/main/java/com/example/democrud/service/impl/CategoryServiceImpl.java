@@ -65,12 +65,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity findOne(Long id) {
         Optional<CategoryEntity> optionalCategory = categoryRepository.findById(id);
-        if (optionalCategory.isEmpty()) {
+        if (!optionalCategory.isPresent()) {
             return new ResponseEntity<>("Không tìm thấy id", HttpStatus.NOT_FOUND);
         }
         CategoryEntity categoryEntity = optionalCategory.get();
         if (categoryEntity.isDeleted() == IS_DELETED.YES) {
-            return new ResponseEntity<>("Bản ghi đã bị xáo", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Loại sản phẩm đã bị xóa", HttpStatus.BAD_REQUEST);
         }
         CategoryResponse categoryResponse = convertEntityToResponse(categoryEntity);
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
@@ -107,12 +107,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity delete(Long id) {
         Optional<CategoryEntity> optionalCategory = categoryRepository.findById(id);
-        if (optionalCategory.isEmpty()) {
+        if (!optionalCategory.isPresent()) {
             return new ResponseEntity<>("Không tìm thấy id", HttpStatus.NOT_FOUND);
         }
         CategoryEntity categoryEntity = optionalCategory.get();
         if (categoryEntity.isDeleted() == IS_DELETED.YES) {
-            return new ResponseEntity<>("Bản ghi đã bị xáo", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Loại sản phẩm đã bị xóa", HttpStatus.BAD_REQUEST);
         }
         categoryRepository.softDeleteById(id);
         return new ResponseEntity("Xóa thành công", HttpStatus.OK);
