@@ -83,7 +83,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (existedCategory.isPresent()) {
             return new ResponseEntity("Đã tồn tại category: " + categoryRequest.getName(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        categoryRequest.setDeleted(NO);
+        categoryRequest.setIsDeleted(NO);
         categoryRequest.setAfterName(Mixin.removeSign(categoryRequest.getName()));
         CategoryEntity categoryEntity = categoryRepository.save(convertRequestToEntity(categoryRequest));
         return new ResponseEntity(convertEntityToResponse(categoryEntity), HttpStatus.OK);

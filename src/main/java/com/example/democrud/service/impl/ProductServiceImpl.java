@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
     private CategoryRepository categoryRepository;
 
     @Override
-    public ResponseEntity addProduct(ProductRequest productRequest) {
+    public ResponseEntity add(ProductRequest productRequest) {
         Optional<ProductEntity> existedProduct = productRepository.findByNameAndDeletedEqualsFalse(productRequest.getName());
         if (existedProduct.isPresent()) {
             return new ResponseEntity("Đã tồn tại sản phẩm: " + productRequest.getName(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -64,6 +64,21 @@ public class ProductServiceImpl implements ProductService {
         productResponse.setNameCategory(categoryEntity.get().getName());
 
         return new ResponseEntity(productResponse, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity update(ProductRequest productRequest) {
+        if (productRequest == null) {
+            return new ResponseEntity("Vui lòng nhập thông tin", HttpStatus.BAD_GATEWAY);
+        }
+        if (productRequest.getId() == null) {
+            return new ResponseEntity("Vui lòng nhập id", HttpStatus.BAD_GATEWAY);
+        }
+        Optional<CategoryEntity> categoryOptional = categoryRepository.findById(productRequest.getIdCategory());
+        CategoryEntity categoryEntity = categoryOptional.get();
+        categoryEntity.setName(categoryEntity.getName());
+        ProductEntity productEntity = productRepository.save(convertRequestToEntity(productRequest));
+        return new ResponseEntity(convertEntityToResponse(productEntity), HttpStatus.OK);
     }
 
     @Override

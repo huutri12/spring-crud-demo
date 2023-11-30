@@ -26,7 +26,7 @@ public class ProductRequest {
     private String updatedBy;
     private String createdBy;
     private LocalDateTime updatedAt;
-    private CategoryEntity categoryEntity;
+    private Long idCategory;
     private Boolean isDeleted;
     private Integer page;
     private Integer size;

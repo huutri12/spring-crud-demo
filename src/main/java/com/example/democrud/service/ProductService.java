@@ -8,13 +8,14 @@ public interface ProductService {
     /**
      * func add Product
      *
-     * @param product Product
+     * @param productRequest ProductRequest
      * @return ResponseEntity
      */
-    ResponseEntity addProduct(ProductRequest product);
+    ResponseEntity add(ProductRequest productRequest);
 
     ResponseEntity findOne(Long id);
 
     ResponseEntity delete(Long id);
 
+    ResponseEntity update(ProductRequest categoryRequest);
 }

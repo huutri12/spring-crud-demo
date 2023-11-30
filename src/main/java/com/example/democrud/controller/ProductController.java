@@ -1,7 +1,6 @@
 package com.example.democrud.controller;
 
 import com.example.democrud.request.ProductRequest;
-import com.example.democrud.response.ProductResponse;
 import com.example.democrud.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,13 +20,24 @@ public class ProductController {
      * @return ResponseEntity
      */
     @GetMapping("/get/{id}")
-    public ResponseEntity getCategory(@PathVariable Long id) {
+    public ResponseEntity getProduct(@PathVariable Long id) {
         return productService.findOne(id);
     }
 
     @PostMapping("/add")
-    public ProductResponse addProduct(@RequestBody ProductRequest productRequest) {
-        return productService.addProduct(productRequest);
+    public ResponseEntity addProduct(@RequestBody ProductRequest productRequest) {
+        return productService.add(productRequest);
+    }
+
+    /**
+     * func update Category
+     *
+     * @param category Category
+     * @return ResponseEntity
+     */
+    @PutMapping("/update")
+    public ResponseEntity updateProduct(@RequestBody ProductRequest category) {
+        return productService.update(category);
     }
 
     /**
