@@ -27,7 +27,7 @@ public class CategoryRequest {
     private String updatedBy;
     private LocalDateTime updatedAt;
     private String afterName;
-    private boolean isDeleted;
+    private Boolean isDeleted;
     private Integer page;
     private Integer size;
     private CommonSortEnum sort;

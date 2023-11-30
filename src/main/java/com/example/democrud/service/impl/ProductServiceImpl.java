@@ -8,6 +8,7 @@ import com.example.democrud.request.ProductRequest;
 import com.example.democrud.response.ProductResponse;
 import com.example.democrud.service.ProductService;
 import com.example.democrud.utils.Constants;
+import com.example.democrud.utils.Mixin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 import static com.example.democrud.service.impl.ProductServiceImplHelper.convertEntityToResponse;
 import static com.example.democrud.service.impl.ProductServiceImplHelper.convertRequestToEntity;
+import static com.example.democrud.utils.Constants.IS_DELETED.NO;
 
 /**
  * ProductServiceImpl class
@@ -34,12 +36,14 @@ public class ProductServiceImpl implements ProductService {
     private CategoryRepository categoryRepository;
 
     @Override
-    public ProductResponse addProduct(ProductRequest productRequest) {
-        if (productRequest != null) {
-            ProductEntity productEntity = productRepository.save(convertRequestToEntity(productRequest));
-            return convertEntityToResponse(productEntity);
+    public ResponseEntity addProduct(ProductRequest productRequest) {
+        Optional<ProductEntity> existedProduct = productRepository.findByNameAndDeletedEqualsFalse(productRequest.getName());
+        if (existedProduct.isPresent()) {
+            return new ResponseEntity("Đã tồn tại sản phẩm: " + productRequest.getName(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return null;
+        productRequest.setIsDeleted(NO);
+        ProductEntity productEntity = productRepository.save(convertRequestToEntity(productRequest));
+        return new ResponseEntity(convertEntityToResponse(productEntity), HttpStatus.OK);
     }
 
     @Override

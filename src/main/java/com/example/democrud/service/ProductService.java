@@ -9,9 +9,9 @@ public interface ProductService {
      * func add Product
      *
      * @param product Product
-     * @return Product
+     * @return ResponseEntity
      */
-    ProductResponse addProduct(ProductRequest product);
+    ResponseEntity addProduct(ProductRequest product);
 
     ResponseEntity findOne(Long id);
 
