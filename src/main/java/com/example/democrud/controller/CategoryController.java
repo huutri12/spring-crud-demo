@@ -45,18 +45,7 @@ public class CategoryController {
      */
     @PostMapping("/search")
     public ResponseEntity search(@RequestBody CategoryRequest categoryRequest) {
-        String sort = categoryRequest.getSort().getValue().isEmpty() ?
-                ASC : categoryRequest.getSort().getValue();
-        String sortByColumn = categoryRequest.getSort().getValue().isEmpty() ?
-                ID_COLUMN : categoryRequest.getSortByColumn().getValue();
-
-        PageRequest pageRequest = PageRequest.of(
-                categoryRequest.getPage(),
-                categoryRequest.getSize(),
-                Sort.Direction.valueOf(sort),
-                sortByColumn
-        );
-        return categoryService.search(categoryRequest, pageRequest);
+        return categoryService.search(categoryRequest);
     }
 
     /**

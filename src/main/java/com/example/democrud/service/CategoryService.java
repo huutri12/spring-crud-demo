@@ -25,10 +25,9 @@ public interface CategoryService {
      * func search
      *
      * @param categoryRequest
-     * @param request
      * @return
      */
-    ResponseEntity search(CategoryRequest categoryRequest, PageRequest request);
+    ResponseEntity search(CategoryRequest categoryRequest);
 
     /**
      * func getOneCategory

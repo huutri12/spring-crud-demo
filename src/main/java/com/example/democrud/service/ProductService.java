@@ -1,10 +1,18 @@
 package com.example.democrud.service;
 
 import com.example.democrud.request.ProductRequest;
+import com.example.democrud.response.CategoryResponse;
 import com.example.democrud.response.ProductResponse;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface ProductService {
+
+    ResponseEntity<List<ProductResponse>> findAll();
+
+    ResponseEntity search(ProductRequest productRequest);
+
     /**
      * func add Product
      *

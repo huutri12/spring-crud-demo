@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.example.democrud.service.impl.CategoryServiceImplHelper.*;
-import static com.example.democrud.utils.Constants.IS_DELETED;
+import static com.example.democrud.utils.Constants.*;
 import static com.example.democrud.utils.Constants.IS_DELETED.NO;
-import static com.example.democrud.utils.Constants.PERCENT;
+import static com.example.democrud.utils.Constants.SORT_VALUE.ASC;
 
 /**
  * CategoryServiceImpl class
@@ -41,13 +42,24 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity search(CategoryRequest categoryRequest, PageRequest request) {
+    public ResponseEntity search(CategoryRequest categoryRequest) {
+        String sort = categoryRequest.getSort().getValue().isEmpty() ?
+                ASC : categoryRequest.getSort().getValue();
+        String sortByColumn = categoryRequest.getSort().getValue().isEmpty() ?
+                ID_COLUMN : categoryRequest.getSortByColumn().getValue();
+
+        PageRequest pageRequest = PageRequest.of(
+                categoryRequest.getPage(),
+                categoryRequest.getSize(),
+                Sort.Direction.valueOf(sort),
+                sortByColumn
+        );
         if (!isValidBeforeGetList(categoryRequest.getName())) {
             return new ResponseEntity("Vui lòng nhập chiều dài < 40 ký tự", null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         String name = categoryRequest.getName();
         name = name != null ? PERCENT + name + PERCENT : null;
-        Pageable pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), request.getSort());
+        Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), pageRequest.getSort());
 
         Page<CategoryEntity> entities = categoryRepository.findByNameContaining(name, pageable);
         List<CategoryResponse> categoryResponses = entities.getContent()
